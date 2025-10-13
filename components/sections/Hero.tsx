@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
 
@@ -52,12 +53,15 @@ export const Hero: React.FC = () => {
 
           {/* Right Image - Decorative */}
           <div className="relative hidden lg:block">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/50 to-transparent rounded-2xl" />
-              <img
+            <div className="relative h-[500px]">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/50 to-transparent rounded-2xl z-10" />
+              <Image
                 src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&h=600&fit=crop"
                 alt="Camping in nature"
-                className="rounded-2xl shadow-2xl w-full h-[500px] object-cover"
+                fill
+                sizes="(max-width: 1024px) 0vw, 50vw"
+                className="rounded-2xl shadow-2xl object-cover"
+                priority
               />
               {/* Floating Badge */}
               <div className="absolute bottom-6 right-6 bg-white text-gray-900 rounded-xl p-4 shadow-xl">

@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { products, categories } from '@/data/products';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Product } from '@/types';
+import { products, categories } from '@/data/products';
 
 interface ProductShowcaseProps {
   onQuickView?: (product: Product) => void;

@@ -3,7 +3,10 @@
     "allow": [
       "Bash(yarn add lucide-react)",
       "Bash(npm install lucide-react)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(yarn dev)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)"
     ],
     "deny": [],
     "ask": []

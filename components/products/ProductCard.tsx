@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Product } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { StarRating } from '@/components/ui/StarRating';
@@ -112,9 +113,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         </p>
 
         {/* Product Name */}
-        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
-          {product.name}
-        </h3>
+        <Link href={`/products/${product.id}`}>
+          <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem] hover:text-forest-600 transition-colors cursor-pointer">
+            {product.name}
+          </h3>
+        </Link>
 
         {/* Description */}
         <p className="text-sm text-gray-600 mb-3 line-clamp-2 min-h-[2.5rem]">

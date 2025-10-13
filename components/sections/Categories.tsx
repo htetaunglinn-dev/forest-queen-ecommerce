@@ -1,10 +1,11 @@
 import React from 'react';
-import { categories } from '@/data/products';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
+import { categories } from '@/data/products';
 
 export const Categories: React.FC = () => {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -18,18 +19,20 @@ export const Categories: React.FC = () => {
 
         {/* Categories Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
-          {categories.map((category) => (
+            {categories.map((category) => (
             <a
               key={category.id}
               href={`/categories/${category.slug}`}
               className="group relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
               {/* Image */}
-              <div className="aspect-square overflow-hidden">
-                <img
+              <div className="aspect-square overflow-hidden relative">
+                <Image
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  fill
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               </div>

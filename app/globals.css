@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --forest-green: #047857;
-  --forest-green-dark: #065f46;
-  --earth-brown: #78350f;
-  --sky-blue: #0284c7;
+  --background: #FFFFFF;
+  --foreground: #432616;
+  --forest-green: #2E4412;
+  --forest-green-dark: #1a2608;
+  --accent-yellow: #F6C500;
+  --accent-coral: #F78C56;
+  --accent-cream: #F9EBCD;
+  --earth-brown: #432616;
 }
 
 @theme inline {
@@ -14,6 +16,56 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Custom color theme - Forest Queen palette */
+  --color-emerald-50: #f0f4ed;
+  --color-emerald-100: #e6ece1;
+  --color-emerald-200: #c6d4b8;
+  --color-emerald-300: #a6bc8f;
+  --color-emerald-400: #708a52;
+  --color-emerald-500: #2E4412;
+  --color-emerald-600: #2E4412;
+  --color-emerald-700: #2E4412;
+  --color-emerald-800: #243509;
+  --color-emerald-900: #1a2608;
+
+  /* Forest color scale */
+  --color-forest-50: #f0f4ed;
+  --color-forest-100: #e6ece1;
+  --color-forest-200: #c6d4b8;
+  --color-forest-300: #a6bc8f;
+  --color-forest-400: #708a52;
+  --color-forest-500: #2E4412;
+  --color-forest-600: #2E4412;
+  --color-forest-700: #243509;
+  --color-forest-800: #1a2608;
+  --color-forest-900: #0f1604;
+
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #F6C500;
+  --color-amber-500: #F6C500;
+  --color-amber-600: #F6C500;
+  --color-amber-700: #d4a800;
+  --color-amber-800: #b89100;
+
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-200: #99f6e4;
+  --color-teal-300: #5eead4;
+  --color-teal-400: #2dd4bf;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+  --color-teal-800: #115e59;
+  --color-teal-900: #1a2608;
+
+  /* Accent colors from the palette */
+  --color-coral: #F78C56;
+  --color-cream: #F9EBCD;
+  --color-brown: #432616;
 }
 
 body {
@@ -37,10 +89,10 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #047857;
+  background: #2E4412;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #065f46;
+  background: #1a2608;
 }
