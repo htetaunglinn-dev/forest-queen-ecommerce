@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { StarRating } from '@/components/ui/StarRating';
 import { Button } from '@/components/ui/Button';
 import { ShoppingCart, Eye } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductCardProps {
   product: Product;
@@ -17,12 +18,23 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [showAddedMessage, setShowAddedMessage] = useState(false);
+  const { addItem } = useCart();
 
   const discountPercentage = product.discount || (
     product.originalPrice
       ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
       : 0
   );
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation if button is inside a link
+    e.stopPropagation();
+    console.log('ProductCard: Adding to cart', product.name);
+    addItem(product, 1);
+    setShowAddedMessage(true);
+    setTimeout(() => setShowAddedMessage(false), 3000);
+  };
 
   return (
     <div className="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
@@ -145,11 +157,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         <Button
           className="w-full group/button"
           disabled={!product.inStock}
+          onClick={handleAddToCart}
         >
           <ShoppingCart size={18} className="mr-2 group-hover/button:scale-110 transition-transform" />
           {product.inStock ? 'Add to Cart' : 'Out of Stock'}
         </Button>
       </div>
+
+      {/* Added to Cart Toast - Shown on this specific card */}
+      {showAddedMessage && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] bg-green-600 text-white px-4 py-2 rounded-lg shadow-xl flex items-center gap-2 animate-bounce">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="font-semibold text-sm">Added!</span>
+        </div>
+      )}
     </div>
   );
 };

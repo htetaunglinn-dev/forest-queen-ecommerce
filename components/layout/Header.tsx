@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import { navigation } from '@/data/products';
+import { useCart } from '@/contexts/CartContext';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { getItemCount } = useCart();
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -81,9 +83,11 @@ export const Header: React.FC = () => {
             </Link>
             <Link href="/cart" className="relative text-gray-700 hover:text-emerald-700 transition-colors">
               <ShoppingCart size={24} />
-              <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                3
-              </span>
+              {getItemCount() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {getItemCount()}
+                </span>
+              )}
             </Link>
 
             {/* Mobile Menu Button */}

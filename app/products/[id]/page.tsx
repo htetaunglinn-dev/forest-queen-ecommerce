@@ -11,14 +11,17 @@ import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/products/ProductCard';
 import { products } from '@/data/products';
 import { Product } from '@/types';
+import { useCart } from '@/contexts/CartContext';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState('');
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
+  const [showAddedMessage, setShowAddedMessage] = useState(false);
 
   useEffect(() => {
     const foundProduct = products.find(p => p.id === params.id);
@@ -59,13 +62,31 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    alert(`Added ${quantity} ${product.name} to cart`);
+    if (product) {
+      console.log('Adding to cart:', product.name, 'Quantity:', quantity);
+      addItem(product, quantity);
+      setShowAddedMessage(true);
+      setTimeout(() => setShowAddedMessage(false), 5000); // Increased to 5 seconds
+      console.log('Item added successfully');
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
+
+      {/* Added to Cart Toast Notification */}
+      {showAddedMessage && (
+        <div className="fixed top-24 right-4 z-[100] bg-green-600 text-white px-8 py-5 rounded-lg shadow-2xl flex items-center gap-4 border-2 border-green-700 transition-all duration-300 animate-bounce">
+          <svg className="w-8 h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <div>
+            <p className="font-bold text-lg">Added to cart!</p>
+            <p className="text-sm mt-1">{quantity}x {product?.name}</p>
+          </div>
+        </div>
+      )}
 
       <main className="flex-1">
         {/* Breadcrumb */}
