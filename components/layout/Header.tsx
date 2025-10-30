@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import { navigation } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
+import { AuthModal } from '@/components/auth/AuthModal';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const { getItemCount } = useCart();
 
   return (
@@ -75,12 +77,13 @@ export const Header: React.FC = () => {
 
           {/* Right Icons */}
           <div className="flex items-center space-x-6">
-            <button className="hidden lg:block text-gray-700 hover:text-emerald-700 transition-colors">
-              <Search size={24} />
-            </button>
-            <Link href="/account" className="text-gray-700 hover:text-emerald-700 transition-colors">
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              className="text-gray-700 hover:text-emerald-700 transition-colors"
+              aria-label="Account"
+            >
               <User size={24} />
-            </Link>
+            </button>
             <Link href="/cart" className="relative text-gray-700 hover:text-emerald-700 transition-colors">
               <ShoppingCart size={24} />
               {getItemCount() > 0 && (
@@ -148,6 +151,9 @@ export const Header: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Auth Modal */}
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </header>
   );
 };
