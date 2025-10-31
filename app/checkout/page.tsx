@@ -305,15 +305,12 @@ export default function CheckoutPage() {
 
               {/* Payment Method */}
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <div className="flex items-center gap-2 mb-6">
-                  <CreditCard className="w-6 h-6" />
-                  <PaymentForm
-                    paymentMethod={paymentMethod}
-                    onChange={handlePaymentChange}
-                    onTypeChange={handlePaymentTypeChange}
-                    errors={paymentErrors}
-                  />
-                </div>
+                <PaymentForm
+                  paymentMethod={paymentMethod}
+                  onChange={handlePaymentChange}
+                  onTypeChange={handlePaymentTypeChange}
+                  errors={paymentErrors}
+                />
               </div>
             </div>
 
