@@ -1,46 +1,60 @@
 import { Product, Category, TrustIndicator, FooterSection, SocialLink, NavigationItem } from '@/types';
 
+/**
+ * Product and Category Images
+ *
+ * All product and category images are sourced from Unsplash.
+ * When using the full Unsplash API with search, proper attribution is required.
+ *
+ * For dynamic images via API:
+ * - Use the Unsplash service in src/services/unsplash.ts
+ * - Display photographer attribution using the UnsplashAttribution component
+ * - Trigger download tracking when images are displayed
+ *
+ * Current static URLs are from Unsplash and follow their guidelines.
+ */
+
 export const categories: Category[] = [
   {
     id: '1',
     name: 'Tents & Shelters',
     slug: 'tents-shelters',
-    image: 'https://images.pexels.com/photos/6271653/pexels-photo-6271653.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&h=400&fit=crop&q=80',
     description: 'Quality tents and shelters for any adventure'
   },
   {
     id: '2',
     name: 'Sleeping Gear',
     slug: 'sleeping-gear',
-    image: 'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=400&h=400&fit=crop&q=80',
     description: 'Stay warm and rest well outdoors'
   },
   {
     id: '3',
     name: 'Backpacks & Bags',
     slug: 'backpacks-bags',
-    image: 'https://images.pexels.com/photos/1366630/pexels-photo-1366630.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1622260614153-03223fb72052?w=400&h=400&fit=crop&q=80',
     description: 'Carry your gear comfortably'
   },
   {
     id: '4',
     name: 'Cooking Equipment',
     slug: 'cooking-equipment',
-    image: 'https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1476041800959-2f6bb412c8ce?w=400&h=400&fit=crop&q=80',
     description: 'Cook delicious meals in the wild'
   },
   {
     id: '5',
     name: 'Hiking Footwear',
     slug: 'hiking-footwear',
-    image: 'https://images.pexels.com/photos/1552212/pexels-photo-1552212.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=400&h=400&fit=crop&q=80',
     description: 'Boots and shoes for every terrain'
   },
   {
     id: '6',
     name: 'Camping Accessories',
     slug: 'camping-accessories',
-    image: 'https://images.pexels.com/photos/3990359/pexels-photo-3990359.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1487730116645-74489c95b41b?w=400&h=400&fit=crop&q=80',
     description: 'Essential gear and tools'
   }
 ];
@@ -56,7 +70,7 @@ export const products: Product[] = [
     discount: 25,
     rating: 4.8,
     reviewCount: 342,
-    image: 'https://images.pexels.com/photos/6271653/pexels-photo-6271653.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&h=800&fit=crop&q=80',
     category: 'tents-shelters',
     inStock: true,
     badges: ['Best Seller', 'Sale']
@@ -68,7 +82,7 @@ export const products: Product[] = [
     price: 179.99,
     rating: 4.6,
     reviewCount: 128,
-    image: 'https://images.pexels.com/photos/2666598/pexels-photo-2666598.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800&h=800&fit=crop&q=80',
     category: 'tents-shelters',
     inStock: true,
     badges: ['New']
@@ -80,7 +94,7 @@ export const products: Product[] = [
     price: 249.99,
     rating: 4.7,
     reviewCount: 215,
-    image: 'https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800&h=800&fit=crop&q=80',
     category: 'tents-shelters',
     inStock: true
   },
@@ -95,7 +109,7 @@ export const products: Product[] = [
     discount: 24,
     rating: 4.9,
     reviewCount: 267,
-    image: 'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=800&fit=crop&q=80',
     category: 'sleeping-gear',
     inStock: true,
     badges: ['Premium', 'Sale']
@@ -107,7 +121,7 @@ export const products: Product[] = [
     price: 79.99,
     rating: 4.5,
     reviewCount: 189,
-    image: 'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800&h=800&fit=crop&q=80',
     category: 'sleeping-gear',
     inStock: true
   },
@@ -120,7 +134,7 @@ export const products: Product[] = [
     discount: 25,
     rating: 4.6,
     reviewCount: 342,
-    image: 'https://images.pexels.com/photos/2516408/pexels-photo-2516408.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1571863533956-01c88e79957e?w=800&h=800&fit=crop&q=80',
     category: 'sleeping-gear',
     inStock: true,
     badges: ['Sale']
@@ -134,7 +148,7 @@ export const products: Product[] = [
     price: 199.99,
     rating: 4.7,
     reviewCount: 456,
-    image: 'https://images.pexels.com/photos/1366630/pexels-photo-1366630.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1622260614153-03223fb72052?w=800&h=800&fit=crop&q=80',
     category: 'backpacks-bags',
     inStock: true,
     badges: ['Best Seller']
@@ -148,7 +162,7 @@ export const products: Product[] = [
     discount: 25,
     rating: 4.6,
     reviewCount: 234,
-    image: 'https://images.pexels.com/photos/2516401/pexels-photo-2516401.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=800&fit=crop&q=80',
     category: 'backpacks-bags',
     inStock: true,
     badges: ['Sale']
@@ -160,7 +174,7 @@ export const products: Product[] = [
     price: 139.99,
     rating: 4.8,
     reviewCount: 178,
-    image: 'https://images.pexels.com/photos/1647121/pexels-photo-1647121.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=800&h=800&fit=crop&q=80',
     category: 'backpacks-bags',
     inStock: true,
     badges: ['New']
@@ -174,7 +188,7 @@ export const products: Product[] = [
     price: 129.99,
     rating: 4.8,
     reviewCount: 312,
-    image: 'https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1476041800959-2f6bb412c8ce?w=800&h=800&fit=crop&q=80',
     category: 'cooking-equipment',
     inStock: true,
     badges: ['Best Seller']
@@ -186,7 +200,7 @@ export const products: Product[] = [
     price: 89.99,
     rating: 4.7,
     reviewCount: 156,
-    image: 'https://images.pexels.com/photos/6271456/pexels-photo-6271456.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1563299796-17596ed6b017?w=800&h=800&fit=crop&q=80',
     category: 'cooking-equipment',
     inStock: true,
     badges: ['Premium']
@@ -200,7 +214,7 @@ export const products: Product[] = [
     discount: 31,
     rating: 4.9,
     reviewCount: 523,
-    image: 'https://images.pexels.com/photos/3990359/pexels-photo-3990359.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?w=800&h=800&fit=crop&q=80',
     category: 'cooking-equipment',
     inStock: true,
     badges: ['Sale']
@@ -216,7 +230,7 @@ export const products: Product[] = [
     discount: 20,
     rating: 4.6,
     reviewCount: 523,
-    image: 'https://images.pexels.com/photos/1552212/pexels-photo-1552212.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=800&h=800&fit=crop&q=80',
     category: 'hiking-footwear',
     inStock: true,
     badges: ['Sale']
@@ -228,7 +242,7 @@ export const products: Product[] = [
     price: 349.99,
     rating: 4.9,
     reviewCount: 187,
-    image: 'https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=800&h=800&fit=crop&q=80',
     category: 'hiking-footwear',
     inStock: true,
     badges: ['Premium']
@@ -242,7 +256,7 @@ export const products: Product[] = [
     price: 49.99,
     rating: 4.7,
     reviewCount: 678,
-    image: 'https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1487730116645-74489c95b41b?w=800&h=800&fit=crop&q=80',
     category: 'camping-accessories',
     inStock: true,
     badges: ['Best Seller']
@@ -256,7 +270,7 @@ export const products: Product[] = [
     discount: 33,
     rating: 4.5,
     reviewCount: 421,
-    image: 'https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?w=800&h=800&fit=crop&q=80',
     category: 'camping-accessories',
     inStock: true,
     badges: ['Sale']
