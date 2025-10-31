@@ -3,10 +3,13 @@
  *
  * This service provides functions to fetch high-quality camping and hiking gear
  * images from Unsplash API.
+ *
+ * SECURITY: All API calls now go through server-side routes (/api/unsplash/*)
+ * to protect the API key and implement rate limiting + caching.
  */
 
-const UNSPLASH_ACCESS_KEY = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
-const UNSPLASH_API_URL = 'https://api.unsplash.com';
+// Use our secure API routes instead of calling Unsplash directly
+const API_BASE_URL = '/api/unsplash';
 
 export interface UnsplashImage {
   id: string;
@@ -57,6 +60,7 @@ export const CAMPING_QUERIES = {
 
 /**
  * Search for camping/hiking images on Unsplash
+ * Now uses secure server-side API route with caching and rate limiting
  * @param query - Search query (use CAMPING_QUERIES for predefined queries)
  * @param perPage - Number of results per page (default: 10, max: 30)
  * @param page - Page number (default: 1)
@@ -66,25 +70,17 @@ export async function searchUnsplashImages(
   perPage: number = 10,
   page: number = 1
 ): Promise<UnsplashSearchResponse> {
-  if (!UNSPLASH_ACCESS_KEY) {
-    console.error('Unsplash access key is not configured');
-    throw new Error('Unsplash access key is not configured. Please add NEXT_PUBLIC_UNSPLASH_ACCESS_KEY to your .env.local file');
-  }
-
-  const url = new URL(`${UNSPLASH_API_URL}/search/photos`);
+  const url = new URL(`${API_BASE_URL}/search`, window.location.origin);
   url.searchParams.append('query', query);
   url.searchParams.append('per_page', perPage.toString());
   url.searchParams.append('page', page.toString());
-  url.searchParams.append('orientation', 'squarish'); // Better for product cards
+  url.searchParams.append('orientation', 'squarish');
 
-  const response = await fetch(url.toString(), {
-    headers: {
-      'Authorization': `Client-ID ${UNSPLASH_ACCESS_KEY}`,
-    },
-  });
+  const response = await fetch(url.toString());
 
   if (!response.ok) {
-    throw new Error(`Unsplash API error: ${response.status} ${response.statusText}`);
+    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    throw new Error(error.error || `API error: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
@@ -92,6 +88,7 @@ export async function searchUnsplashImages(
 
 /**
  * Get a random camping/hiking image from Unsplash
+ * Now uses secure server-side API route with caching and rate limiting
  * @param query - Search query to filter random images (optional)
  * @param count - Number of random images to return (default: 1, max: 30)
  */
@@ -99,25 +96,18 @@ export async function getRandomUnsplashImage(
   query?: string,
   count: number = 1
 ): Promise<UnsplashImage | UnsplashImage[]> {
-  if (!UNSPLASH_ACCESS_KEY) {
-    throw new Error('Unsplash access key is not configured');
-  }
-
-  const url = new URL(`${UNSPLASH_API_URL}/photos/random`);
+  const url = new URL(`${API_BASE_URL}/random`, window.location.origin);
   if (query) {
     url.searchParams.append('query', query);
   }
   url.searchParams.append('count', count.toString());
   url.searchParams.append('orientation', 'squarish');
 
-  const response = await fetch(url.toString(), {
-    headers: {
-      'Authorization': `Client-ID ${UNSPLASH_ACCESS_KEY}`,
-    },
-  });
+  const response = await fetch(url.toString());
 
   if (!response.ok) {
-    throw new Error(`Unsplash API error: ${response.status} ${response.statusText}`);
+    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    throw new Error(error.error || `API error: ${response.status} ${response.statusText}`);
   }
 
   return response.json();
@@ -180,22 +170,16 @@ export function getPhotoPageUrl(image: UnsplashImage): string {
 /**
  * Trigger a download tracking event
  * Required by Unsplash API guidelines when displaying images
+ * NOTE: This function is deprecated for client-side use.
+ * Download tracking should be handled server-side to protect the API key.
  * @param downloadLocation - The download_location URL from the image object
+ * @deprecated Use server-side download tracking instead
  */
 export async function triggerDownload(downloadLocation: string): Promise<void> {
-  if (!UNSPLASH_ACCESS_KEY) {
-    return;
-  }
-
-  try {
-    await fetch(downloadLocation, {
-      headers: {
-        'Authorization': `Client-ID ${UNSPLASH_ACCESS_KEY}`,
-      },
-    });
-  } catch (error) {
-    console.error('Failed to trigger download tracking:', error);
-  }
+  console.warn('[Unsplash] triggerDownload is deprecated. Implement server-side download tracking.');
+  // Download tracking should be implemented server-side
+  // For now, this is a no-op to avoid exposing the API key
+  return;
 }
 
 /**
