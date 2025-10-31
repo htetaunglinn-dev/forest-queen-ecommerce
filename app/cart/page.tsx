@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { CartItem } from '@/components/cart/CartItem';
-import { CartSummary } from '@/components/cart/CartSummary';
-import { Button } from '@/components/ui/Button';
-import { useCart } from '@/contexts/CartContext';
-import { calculateShipping, calculateTax, calculateTotal } from '@/lib/utils';
-import { ShoppingBag, ArrowLeft } from 'lucide-react';
+import { useRouter } from "next/navigation";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { CartItem } from "@/components/cart/CartItem";
+import { CartSummary } from "@/components/cart/CartSummary";
+import { Button } from "@/components/ui/Button";
+import { useCart } from "@/contexts/CartContext";
+import { calculateShipping, calculateTax, calculateTotal } from "@/lib/utils";
+import { ShoppingBag, ArrowLeft } from "lucide-react";
 
 export default function CartPage() {
   const router = useRouter();
@@ -20,11 +20,11 @@ export default function CartPage() {
   const total = calculateTotal(subtotal, shipping, tax);
 
   const handleCheckout = () => {
-    router.push('/checkout');
+    router.push("/checkout");
   };
 
   const handleContinueShopping = () => {
-    router.push('/products');
+    router.push("/products");
   };
 
   // Empty Cart State
@@ -44,7 +44,8 @@ export default function CartPage() {
               Your cart is empty
             </h1>
             <p className="text-gray-600 mb-8">
-              Looks like you haven't added any items to your cart yet. Start shopping to fill it up!
+              Looks like you haven&apos;t added any items to your cart yet.
+              Start shopping to fill it up!
             </p>
             <Button onClick={handleContinueShopping} size="lg">
               Start Shopping
@@ -64,7 +65,7 @@ export default function CartPage() {
 
       <main className="flex-1">
         {/* Page Header */}
-        <div className="bg-white border-b">
+        <div className="bg-white shadow-stone-400/10 shadow-sm">
           <div className="container mx-auto px-4 py-6">
             <div className="flex items-center justify-between">
               <div>
@@ -72,7 +73,8 @@ export default function CartPage() {
                   Shopping Cart
                 </h1>
                 <p className="text-gray-600">
-                  {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
+                  {items.length} {items.length === 1 ? "item" : "items"} in your
+                  cart
                 </p>
               </div>
               <button
@@ -92,7 +94,9 @@ export default function CartPage() {
             {/* Cart Items */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Cart Items</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  Cart Items
+                </h2>
                 <div className="divide-y divide-gray-200">
                   {items.map((item) => (
                     <CartItem
@@ -135,29 +139,69 @@ export default function CartPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               <div>
                 <div className="flex justify-center mb-3">
-                  <svg className="w-8 h-8 text-forest-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-8 h-8 text-forest-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">Fast Delivery</h3>
-                <p className="text-sm text-gray-600">Free shipping on orders over $50</p>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Fast Delivery
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Free shipping on orders over $50
+                </p>
               </div>
               <div>
                 <div className="flex justify-center mb-3">
-                  <svg className="w-8 h-8 text-forest-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  <svg
+                    className="w-8 h-8 text-forest-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">Secure Payment</h3>
-                <p className="text-sm text-gray-600">100% secure transactions</p>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Secure Payment
+                </h3>
+                <p className="text-sm text-gray-600">
+                  100% secure transactions
+                </p>
               </div>
               <div>
                 <div className="flex justify-center mb-3">
-                  <svg className="w-8 h-8 text-forest-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <svg
+                    className="w-8 h-8 text-forest-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">Easy Returns</h3>
+                <h3 className="font-semibold text-gray-900 mb-1">
+                  Easy Returns
+                </h3>
                 <p className="text-sm text-gray-600">30-day return policy</p>
               </div>
             </div>
