@@ -102,3 +102,25 @@ html {
   scrollbar-width: thin;
   scrollbar-color: rgba(46, 68, 18, 0.3) transparent;
 }
+
+/* Cursor pointer for all interactive elements */
+button,
+a,
+[role="button"],
+[onclick],
+[type="button"],
+[type="submit"],
+[type="reset"],
+label[for],
+input[type="checkbox"],
+input[type="radio"],
+select,
+summary {
+  cursor: pointer;
+}
+
+/* Disabled state should show not-allowed cursor */
+button:disabled,
+[disabled] {
+  cursor: not-allowed;
+}
