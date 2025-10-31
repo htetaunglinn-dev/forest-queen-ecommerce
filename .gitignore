@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 /.claude
+/.mcp.json
 .pnp.*
 .yarn/*
 !.yarn/patches
