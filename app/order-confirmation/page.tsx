@@ -8,13 +8,49 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { formatCurrency, formatOrderDate, calculateDeliveryDate } from '@/lib/utils';
 import { CheckCircle, Package, Truck, Mail, Printer, ArrowRight } from 'lucide-react';
+import type { CartItem } from '@/contexts/CartContext';
+
+interface ShippingAddress {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+interface ShippingMethod {
+  name: string;
+  estimatedDays: string;
+}
+
+interface PaymentMethod {
+  type: 'card' | 'paypal' | 'apple-pay';
+  cardName?: string;
+  cardNumber?: string;
+}
+
+interface OrderData {
+  orderNumber: string;
+  date: string;
+  items: CartItem[];
+  shippingAddress: ShippingAddress;
+  shippingMethod: ShippingMethod;
+  paymentMethod: PaymentMethod;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
+}
 
 function OrderConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('order');
 
-  const [orderData, setOrderData] = useState<any>(null);
+  const [orderData, setOrderData] = useState<OrderData | null>(null);
 
   useEffect(() => {
     // Load order data from localStorage
@@ -122,7 +158,7 @@ function OrderConfirmationContent() {
               <div>
                 <p className="text-blue-900 font-medium">Confirmation email sent!</p>
                 <p className="text-sm text-blue-800 mt-1">
-                  We've sent a confirmation email to{' '}
+                  We&apos;ve sent a confirmation email to{' '}
                   <span className="font-semibold">{orderData.shippingAddress.email}</span> with your
                   order details and tracking information.
                 </p>
@@ -146,7 +182,7 @@ function OrderConfirmationContent() {
             {/* Ordered Items */}
             <div className="space-y-4 mb-6">
               <h3 className="font-semibold text-gray-900">Items Ordered</h3>
-              {orderData.items.map((item: any) => (
+              {orderData.items.map((item) => (
                 <div key={item.product.id} className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
                   <div className="relative w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     <Image

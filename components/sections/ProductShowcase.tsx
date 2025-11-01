@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Product } from '@/types';
 import { products, categories } from '@/data/products';
@@ -74,12 +75,15 @@ export const ProductShowcase: React.FC<ProductShowcaseProps> = ({ onQuickView })
           </div>
         )}
 
-        {/* Load More Button */}
+        {/* See More Button */}
         {filteredProducts.length > 0 && (
           <div className="text-center mt-12">
-            <button className="px-8 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg">
-              Load More Products
-            </button>
+            <Link
+              href="/categories/all-products"
+              className="inline-block px-8 py-3 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg"
+            >
+              See More Products
+            </Link>
           </div>
         )}
       </div>

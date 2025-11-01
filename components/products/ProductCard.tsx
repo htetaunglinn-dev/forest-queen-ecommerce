@@ -9,6 +9,7 @@ import { StarRating } from '@/components/ui/StarRating';
 import { Button } from '@/components/ui/Button';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/contexts/ToastContext';
 
 interface ProductCardProps {
   product: Product;
@@ -18,8 +19,8 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [showAddedMessage, setShowAddedMessage] = useState(false);
   const { addItem } = useCart();
+  const { toast } = useToast();
 
   const discountPercentage = product.discount || (
     product.originalPrice
@@ -32,8 +33,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
     e.stopPropagation();
     console.log('ProductCard: Adding to cart', product.name);
     addItem(product, 1);
-    setShowAddedMessage(true);
-    setTimeout(() => setShowAddedMessage(false), 3000);
+    toast({
+      variant: 'success',
+      title: 'Added to cart!',
+      description: `${product.name} has been added to your cart.`,
+      duration: 3000,
+    });
   };
 
   return (
@@ -163,16 +168,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
           {product.inStock ? 'Add to Cart' : 'Out of Stock'}
         </Button>
       </div>
-
-      {/* Added to Cart Toast - Shown on this specific card */}
-      {showAddedMessage && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[60] bg-green-600 text-white px-4 py-2 rounded-lg shadow-xl flex items-center gap-2 animate-bounce">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          <span className="font-semibold text-sm">Added!</span>
-        </div>
-      )}
     </div>
   );
 };

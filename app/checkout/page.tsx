@@ -222,7 +222,7 @@ export default function CheckoutPage() {
 
       <main className="flex-1">
         {/* Page Header */}
-        <div className="bg-white border-b">
+        <div className="bg-white shadow-stone-400/10 shadow-sm">
           <div className="container mx-auto px-4 py-6">
             <div className="flex items-center justify-between">
               <div>

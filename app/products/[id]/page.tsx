@@ -12,16 +12,17 @@ import { ProductCard } from '@/components/products/ProductCard';
 import { products } from '@/data/products';
 import { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { addItem } = useCart();
+  const { toast } = useToast();
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState('');
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
-  const [showAddedMessage, setShowAddedMessage] = useState(false);
 
   useEffect(() => {
     const foundProduct = products.find(p => p.id === params.id);
@@ -38,7 +39,7 @@ export default function ProductDetailPage() {
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h1>
-            <p className="text-gray-600 mb-6">Sorry, we couldn't find the product you're looking for.</p>
+            <p className="text-gray-600 mb-6">Sorry, we couldn&apos;t find the product you&apos;re looking for.</p>
             <Button onClick={() => router.push('/products')}>
               Browse All Products
             </Button>
@@ -65,8 +66,12 @@ export default function ProductDetailPage() {
     if (product) {
       console.log('Adding to cart:', product.name, 'Quantity:', quantity);
       addItem(product, quantity);
-      setShowAddedMessage(true);
-      setTimeout(() => setShowAddedMessage(false), 5000); // Increased to 5 seconds
+      toast({
+        variant: 'success',
+        title: 'Added to cart!',
+        description: `${quantity} ${quantity > 1 ? 'items' : 'item'} of ${product.name} added to your cart.`,
+        duration: 3000,
+      });
       console.log('Item added successfully');
     }
   };
@@ -74,19 +79,6 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
-
-      {/* Added to Cart Toast Notification */}
-      {showAddedMessage && (
-        <div className="fixed top-24 right-4 z-[100] bg-green-600 text-white px-8 py-5 rounded-lg shadow-2xl flex items-center gap-4 border-2 border-green-700 transition-all duration-300 animate-bounce">
-          <svg className="w-8 h-8 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          <div>
-            <p className="font-bold text-lg">Added to cart!</p>
-            <p className="text-sm mt-1">{quantity}x {product?.name}</p>
-          </div>
-        </div>
-      )}
 
       <main className="flex-1">
         {/* Breadcrumb */}

@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Mountain, Users, Award, Heart, Leaf, Shield } from 'lucide-react';
@@ -90,10 +92,10 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-gray-600 leading-relaxed">
                   <p>
-                    Founded in 2009 by outdoor enthusiast Sarah Mitchell, Forest Queen was born from a simple belief: everyone deserves access to high-quality, reliable outdoor gear that doesn't break the bank.
+                    Founded in 2009 by outdoor enthusiast Sarah Mitchell, Forest Queen was born from a simple belief: everyone deserves access to high-quality, reliable outdoor gear that doesn&apos;t break the bank.
                   </p>
                   <p>
-                    What started as a small shop in Portland, Oregon, has grown into a trusted name in outdoor equipment. We've equipped thousands of adventurers for their journeys into the wild, from weekend campers to seasoned mountaineers.
+                    What started as a small shop in Portland, Oregon, has grown into a trusted name in outdoor equipment. We&apos;ve equipped thousands of adventurers for their journeys into the wild, from weekend campers to seasoned mountaineers.
                   </p>
                   <p>
                     Today, we continue to innovate and expand our product line while staying true to our core values of quality, sustainability, and customer satisfaction. Every product we offer is tested by real outdoor enthusiasts in real conditions.
@@ -101,10 +103,11 @@ export default function AboutPage() {
                 </div>
               </div>
               <div className="relative h-96 rounded-lg overflow-hidden shadow-xl">
-                <img
+                <Image
                   src="https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?auto=compress&cs=tinysrgb&w=1200"
                   alt="Outdoor camping scene"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
             </div>
@@ -179,10 +182,11 @@ export default function AboutPage() {
                   className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
                 >
                   <div className="h-64 bg-gray-200 relative overflow-hidden">
-                    <img
+                    <Image
                       src={member.image}
                       alt={member.name}
-                      className="w-full h-full object-cover object-top"
+                      fill
+                      className="object-cover object-top"
                     />
                   </div>
                   <div className="p-6">
@@ -225,12 +229,12 @@ export default function AboutPage() {
               Explore our collection of premium outdoor gear and start planning your next expedition today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
+              <Link
                 href="/products"
                 className="inline-block px-8 py-4 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
               >
                 Shop All Products
-              </a>
+              </Link>
               <a
                 href="/contact"
                 className="inline-block px-8 py-4 bg-white text-emerald-600 font-semibold rounded-lg border-2 border-emerald-600 hover:bg-emerald-50 transition-colors"

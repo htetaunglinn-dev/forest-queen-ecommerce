@@ -7,6 +7,8 @@ import { X, ShoppingCart, Minus, Plus } from 'lucide-react';
 import { StarRating } from '@/components/ui/StarRating';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/contexts/ToastContext';
 
 interface ProductQuickViewProps {
   product: Product | null;
@@ -20,6 +22,8 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
   onClose,
 }) => {
   const [quantity, setQuantity] = React.useState(1);
+  const { addItem } = useCart();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (isOpen) {
@@ -42,6 +46,19 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
 
   const handleIncrease = () => setQuantity(q => q + 1);
   const handleDecrease = () => setQuantity(q => Math.max(1, q - 1));
+
+  const handleAddToCart = () => {
+    if (product) {
+      addItem(product, quantity);
+      toast({
+        variant: 'success',
+        title: 'Added to cart!',
+        description: `${quantity} ${quantity > 1 ? 'items' : 'item'} of ${product.name} added to your cart.`,
+        duration: 3000,
+      });
+      onClose();
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -179,6 +196,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
                 size="lg"
                 className="w-full mb-4"
                 disabled={!product.inStock}
+                onClick={handleAddToCart}
               >
                 <ShoppingCart size={20} className="mr-2" />
                 {product.inStock ? `Add ${quantity} to Cart` : 'Out of Stock'}

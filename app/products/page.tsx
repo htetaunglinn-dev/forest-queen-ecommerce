@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ProductCard } from '@/components/products/ProductCard';
 import { ProductQuickView } from '@/components/products/ProductQuickView';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { products, categories } from '@/data/products';
 import { Product } from '@/types';
 
@@ -181,21 +183,51 @@ export default function ProductsPage() {
                   Showing <span className="font-semibold">{filteredAndSortedProducts.length}</span> products
                 </p>
                 <div className="flex items-center gap-2">
-                  <label htmlFor="sort" className="text-sm text-gray-600">
-                    Sort by:
-                  </label>
-                  <select
-                    id="sort"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as SortOption)}
-                    className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-forest-500 focus:border-transparent"
-                  >
-                    <option value="featured">Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Highest Rated</option>
-                    <option value="newest">Newest</option>
-                  </select>
+                  <span className="text-sm text-gray-600">Sort by:</span>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="inline-flex items-center justify-between gap-2 border border-gray-300 rounded-lg px-4 py-2 text-sm hover:bg-gray-50 focus:ring-2 focus:ring-forest-500 focus:border-transparent transition-colors min-w-[180px]">
+                      <span className="text-gray-700">
+                        {sortBy === 'featured' && 'Featured'}
+                        {sortBy === 'price-low' && 'Price: Low to High'}
+                        {sortBy === 'price-high' && 'Price: High to Low'}
+                        {sortBy === 'rating' && 'Highest Rated'}
+                        {sortBy === 'newest' && 'Newest'}
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        selected={sortBy === 'featured'}
+                        onSelect={() => setSortBy('featured')}
+                      >
+                        Featured
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        selected={sortBy === 'price-low'}
+                        onSelect={() => setSortBy('price-low')}
+                      >
+                        Price: Low to High
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        selected={sortBy === 'price-high'}
+                        onSelect={() => setSortBy('price-high')}
+                      >
+                        Price: High to Low
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        selected={sortBy === 'rating'}
+                        onSelect={() => setSortBy('rating')}
+                      >
+                        Highest Rated
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        selected={sortBy === 'newest'}
+                        onSelect={() => setSortBy('newest')}
+                      >
+                        Newest
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 

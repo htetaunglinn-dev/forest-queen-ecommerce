@@ -92,7 +92,7 @@ export default function ContactPage() {
                 Get In Touch
               </h1>
               <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto">
-                We're here to help with any questions about our products or your outdoor adventures
+                We&apos;re here to help with any questions about our products or your outdoor adventures
               </p>
             </div>
           </div>
@@ -213,7 +213,7 @@ export default function ContactPage() {
 
                   {submitStatus === 'success' && (
                     <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800">
-                      Thank you for your message! We'll get back to you soon.
+                      Thank you for your message! We&apos;ll get back to you soon.
                     </div>
                   )}
 
