@@ -150,8 +150,8 @@ export function getClientIP(request: NextRequest): string {
     return realIP.trim();
   }
 
-  // Fallback to connection remote address
-  return request.ip || 'unknown';
+  // Fallback to unknown if no IP headers are present
+  return 'unknown';
 }
 
 /**
