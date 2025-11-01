@@ -45,16 +45,19 @@ export default function AboutPage() {
       name: 'Sarah Mitchell',
       role: 'Founder & CEO',
       bio: 'Passionate mountaineer with 20+ years of outdoor experience',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&q=80',
     },
     {
       name: 'James Chen',
       role: 'Head of Product',
       bio: 'Expert in outdoor gear design and sustainable materials',
+      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&q=80',
     },
     {
       name: 'Emily Rodriguez',
       role: 'Customer Success',
       bio: 'Dedicated to ensuring every customer has an amazing experience',
+      image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&q=80',
     },
   ];
 
@@ -175,8 +178,12 @@ export default function AboutPage() {
                   key={index}
                   className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
                 >
-                  <div className="h-64 bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
-                    <Users className="w-24 h-24 text-white opacity-50" />
+                  <div className="h-64 bg-gray-200 relative overflow-hidden">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover object-top"
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
