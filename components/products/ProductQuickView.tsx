@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/contexts/ToastContext';
+import { getBadgeVariant } from '@/lib/utils';
 
 interface ProductQuickViewProps {
   product: Product | null;
@@ -97,19 +98,11 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
               )}
               {product.badges && product.badges.length > 0 && (
                 <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
-                  {product.badges.map((badge, index) => {
-                    const badgeVariant =
-                      badge.toLowerCase() === 'sale' ? 'sale' :
-                      badge.toLowerCase() === 'new' ? 'new' :
-                      badge.toLowerCase() === 'premium' ? 'premium' :
-                      'bestseller';
-
-                    return (
-                      <Badge key={index} variant={badgeVariant}>
-                        {badge}
-                      </Badge>
-                    );
-                  })}
+                  {product.badges.map((badge, index) => (
+                    <Badge key={index} variant={getBadgeVariant(badge)}>
+                      {badge}
+                    </Badge>
+                  ))}
                 </div>
               )}
             </div>

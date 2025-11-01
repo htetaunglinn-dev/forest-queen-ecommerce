@@ -221,3 +221,19 @@ export const maskCardNumber = (cardNumber: string): string => {
   const lastFour = cleaned.slice(-4);
   return `**** **** **** ${lastFour}`;
 };
+
+/**
+ * Map badge text to Badge component variant
+ * Handles various badge text formats (e.g., "Best Seller", "Sale", "New", "Premium")
+ */
+export const getBadgeVariant = (badgeText: string): 'sale' | 'new' | 'premium' | 'bestseller' => {
+  const normalizedBadge = badgeText.toLowerCase().replace(/\s+/g, '');
+
+  if (normalizedBadge === 'sale') return 'sale';
+  if (normalizedBadge === 'new') return 'new';
+  if (normalizedBadge === 'premium') return 'premium';
+  if (normalizedBadge === 'bestseller') return 'bestseller';
+
+  // Default fallback for unknown badge types
+  return 'new';
+};

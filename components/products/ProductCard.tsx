@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/contexts/ToastContext';
+import { getBadgeVariant } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -48,19 +49,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         {/* Badges */}
         {product.badges && product.badges.length > 0 && (
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
-            {product.badges.map((badge, index) => {
-              const badgeVariant =
-                badge.toLowerCase() === 'sale' ? 'sale' :
-                badge.toLowerCase() === 'new' ? 'new' :
-                badge.toLowerCase() === 'premium' ? 'premium' :
-                'bestseller';
-
-              return (
-                <Badge key={index} variant={badgeVariant}>
-                  {badge}
-                </Badge>
-              );
-            })}
+            {product.badges.map((badge, index) => (
+              <Badge key={index} variant={getBadgeVariant(badge)}>
+                {badge}
+              </Badge>
+            ))}
           </div>
         )}
 

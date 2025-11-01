@@ -13,6 +13,7 @@ import { products } from '@/data/products';
 import { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/contexts/ToastContext';
+import { getBadgeVariant } from '@/lib/utils';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -141,7 +142,7 @@ export default function ProductDetailPage() {
               {product.badges && product.badges.length > 0 && (
                 <div className="flex gap-2 mb-4">
                   {product.badges.map((badge, idx) => (
-                    <Badge key={idx} variant={badge === 'Sale' ? 'sale' : 'default'}>
+                    <Badge key={idx} variant={getBadgeVariant(badge)}>
                       {badge}
                     </Badge>
                   ))}
