@@ -175,7 +175,7 @@ export function getPhotoPageUrl(image: UnsplashImage): string {
  * @param downloadLocation - The download_location URL from the image object
  * @deprecated Use server-side download tracking instead
  */
-export async function triggerDownload(downloadLocation: string): Promise<void> {
+export async function triggerDownload(_downloadLocation: string): Promise<void> {
   console.warn('[Unsplash] triggerDownload is deprecated. Implement server-side download tracking.');
   // Download tracking should be implemented server-side
   // For now, this is a no-op to avoid exposing the API key

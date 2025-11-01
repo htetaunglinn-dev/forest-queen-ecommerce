@@ -10,8 +10,8 @@ import { OrderSummary } from '@/components/checkout/OrderSummary';
 import { Button } from '@/components/ui/Button';
 import { useCart } from '@/contexts/CartContext';
 import { ShippingAddress, PaymentMethod, ShippingMethod } from '@/types';
-import { calculateShipping, calculateTax, calculateTotal, isValidEmail, isValidPhone, isValidCardNumber, generateOrderNumber } from '@/lib/utils';
-import { ArrowLeft, Truck, CreditCard, Lock } from 'lucide-react';
+import { calculateTax, calculateTotal, isValidEmail, isValidPhone, isValidCardNumber, generateOrderNumber } from '@/lib/utils';
+import { ArrowLeft, Truck, Lock } from 'lucide-react';
 
 const shippingMethods: ShippingMethod[] = [
   {
