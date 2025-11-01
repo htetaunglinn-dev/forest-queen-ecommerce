@@ -288,7 +288,7 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Map Section (Placeholder) */}
+        {/* Map Section */}
         <section className="py-16 bg-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
@@ -299,15 +299,38 @@ export default function ContactPage() {
                 Come see our full product line at our Portland location
               </p>
             </div>
-            <div className="bg-gray-300 rounded-lg overflow-hidden shadow-lg h-96 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-600 font-medium">
-                  123 Adventure Lane, Portland, OR 97201
-                </p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Map integration placeholder
-                </p>
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2795.3168476891834!2d-122.67620768444185!3d45.52306997910149!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5495a0b1f8c3ad15%3A0x5d7f6d8c8c9f8a7e!2sPortland%2C%20OR%2097201!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus"
+                width="100%"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Forest Queen Store Location"
+                className="w-full"
+              />
+              <div className="p-6 bg-white border-t border-gray-200">
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-6 h-6 text-emerald-600 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-gray-900 font-semibold text-lg">
+                      123 Adventure Lane, Portland, OR 97201
+                    </p>
+                    <p className="text-gray-600 mt-1">
+                      Visit us during business hours or book an appointment online
+                    </p>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=123+Adventure+Lane,+Portland,+OR+97201"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-3 text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                    >
+                      Get Directions →
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

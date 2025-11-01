@@ -117,10 +117,41 @@ input[type="radio"],
 select,
 summary {
   cursor: pointer;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Subtle hover effect for all clickable elements */
+button:not(:disabled):hover,
+a:hover,
+[role="button"]:not(:disabled):hover,
+[onclick]:hover,
+[type="button"]:not(:disabled):hover,
+[type="submit"]:not(:disabled):hover,
+[type="reset"]:not(:disabled):hover,
+label[for]:hover,
+select:hover,
+summary:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* Active state for clickable elements */
+button:not(:disabled):active,
+a:active,
+[role="button"]:not(:disabled):active,
+[onclick]:active,
+[type="button"]:not(:disabled):active,
+[type="submit"]:not(:disabled):active,
+[type="reset"]:not(:disabled):active,
+label[for]:active,
+select:active,
+summary:active {
+  transform: translateY(0);
 }
 
 /* Disabled state should show not-allowed cursor */
 button:disabled,
 [disabled] {
   cursor: not-allowed;
+  opacity: 0.5;
 }
