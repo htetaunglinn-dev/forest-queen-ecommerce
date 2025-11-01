@@ -7,7 +7,7 @@ import { Product } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { StarRating } from '@/components/ui/StarRating';
 import { Button } from '@/components/ui/Button';
-import { ShoppingCart, Eye } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/contexts/ToastContext';
 import { getBadgeVariant } from '@/lib/utils';
@@ -43,7 +43,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
   };
 
   return (
-    <div className="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
+    <Link href={`/products/${product.id}`} className="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 block">
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-gray-100">
         {/* Badges */}
@@ -95,18 +95,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
           )}
         </div>
 
-        {/* Quick View Overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <Button
-            variant="secondary"
-            onClick={() => onQuickView?.(product)}
-            className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
-          >
-            <Eye size={18} className="mr-2" />
-            Quick View
-          </Button>
-        </div>
-
         {/* Stock Status */}
         {!product.inStock && (
           <div className="absolute inset-0 bg-gray-900/70 flex items-center justify-center">
@@ -123,11 +111,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         </p>
 
         {/* Product Name */}
-        <Link href={`/products/${product.id}`}>
-          <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem] hover:text-forest-600 transition-colors cursor-pointer">
-            {product.name}
-          </h3>
-        </Link>
+        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem] group-hover:text-forest-600 transition-colors">
+          {product.name}
+        </h3>
 
         {/* Description */}
         <p className="text-sm text-gray-600 mb-3 line-clamp-2 min-h-[2.5rem]">
@@ -161,6 +147,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
           {product.inStock ? 'Add to Cart' : 'Out of Stock'}
         </Button>
       </div>
-    </div>
+    </Link>
   );
 };

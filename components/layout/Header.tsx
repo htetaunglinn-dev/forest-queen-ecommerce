@@ -1,17 +1,85 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
-import { navigation } from '@/data/products';
+import { navigation, products } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { SearchDropdown } from '@/components/search/SearchDropdown';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { getItemCount } = useCart();
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Filter products based on search query
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+
+    const query = searchQuery.toLowerCase();
+    return products
+      .filter(product =>
+        product.name.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query)
+      )
+      .slice(0, 10); // Limit to top 10 results
+  }, [searchQuery]);
+
+  // Handle search input changes
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setIsSearchOpen(value.trim().length > 0);
+  };
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setIsSearchOpen(false);
+  };
+
+  // Close search dropdown
+  const handleCloseSearch = () => {
+    setIsSearchOpen(false);
+  };
+
+  // Handle click outside to close search dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    if (isSearchOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSearchOpen]);
+
+  // Handle escape key to close search dropdown
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsSearchOpen(false);
+      }
+    };
+
+    if (isSearchOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isSearchOpen]);
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -63,15 +131,23 @@ export const Header: React.FC = () => {
 
           {/* Search Bar */}
           <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
-            <div className="relative w-full">
+            <div ref={searchRef} className="relative w-full">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full px-4 py-2 pl-10 pr-4 text-gray-700 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+
+              <SearchDropdown
+                searchQuery={searchQuery}
+                searchResults={searchResults}
+                isOpen={isSearchOpen}
+                onClose={handleCloseSearch}
+                onClearSearch={handleClearSearch}
+              />
             </div>
           </div>
 
@@ -114,10 +190,18 @@ export const Header: React.FC = () => {
                 type="text"
                 placeholder="Search products..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full px-4 py-2 pl-10 text-gray-700 bg-gray-100 border border-gray-300 rounded-full focus:outline-none focus:border-emerald-500"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+
+              <SearchDropdown
+                searchQuery={searchQuery}
+                searchResults={searchResults}
+                isOpen={isSearchOpen}
+                onClose={handleCloseSearch}
+                onClearSearch={handleClearSearch}
+              />
             </div>
 
             {/* Mobile Navigation Links */}

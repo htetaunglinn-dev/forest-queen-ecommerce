@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { StarRating } from '@/components/ui/StarRating';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import { ProductCard } from '@/components/products/ProductCard';
-import { products } from '@/data/products';
-import { Product } from '@/types';
-import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/contexts/ToastContext';
-import { getBadgeVariant } from '@/lib/utils';
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { StarRating } from "@/components/ui/StarRating";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { ProductCard } from "@/components/products/ProductCard";
+import { products } from "@/data/products";
+import { Product } from "@/types";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/contexts/ToastContext";
+import { getBadgeVariant } from "@/lib/utils";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -22,11 +22,13 @@ export default function ProductDetailPage() {
   const { toast } = useToast();
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState('');
-  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
+  const [selectedImage, setSelectedImage] = useState("");
+  const [activeTab, setActiveTab] = useState<
+    "description" | "specs" | "reviews"
+  >("description");
 
   useEffect(() => {
-    const foundProduct = products.find(p => p.id === params.id);
+    const foundProduct = products.find((p) => p.id === params.id);
     if (foundProduct) {
       setProduct(foundProduct);
       setSelectedImage(foundProduct.image);
@@ -39,9 +41,13 @@ export default function ProductDetailPage() {
         <Header />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h1>
-            <p className="text-gray-600 mb-6">Sorry, we couldn&apos;t find the product you&apos;re looking for.</p>
-            <Button onClick={() => router.push('/products')}>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Product Not Found
+            </h1>
+            <p className="text-gray-600 mb-6">
+              Sorry, we couldn&apos;t find the product you&apos;re looking for.
+            </p>
+            <Button onClick={() => router.push("/products")}>
               Browse All Products
             </Button>
           </div>
@@ -53,7 +59,7 @@ export default function ProductDetailPage() {
 
   // Get related products (same category, excluding current)
   const relatedProducts = products
-    .filter(p => p.category === product.category && p.id !== product.id)
+    .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
 
   const handleQuantityChange = (delta: number) => {
@@ -65,15 +71,17 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (product) {
-      console.log('Adding to cart:', product.name, 'Quantity:', quantity);
+      console.log("Adding to cart:", product.name, "Quantity:", quantity);
       addItem(product, quantity);
       toast({
-        variant: 'success',
-        title: 'Added to cart!',
-        description: `${quantity} ${quantity > 1 ? 'items' : 'item'} of ${product.name} added to your cart.`,
+        variant: "success",
+        title: "Added to cart!",
+        description: `${quantity} ${quantity > 1 ? "items" : "item"} of ${
+          product.name
+        } added to your cart.`,
         duration: 3000,
       });
-      console.log('Item added successfully');
+      console.log("Item added successfully");
     }
   };
 
@@ -83,14 +91,20 @@ export default function ProductDetailPage() {
 
       <main className="flex-1">
         {/* Breadcrumb */}
-        <div className="bg-white border-b">
+        <div className="bg-white shadow-sm shadow-gray-200/50">
           <div className="container mx-auto px-4 py-4">
             <nav className="flex items-center gap-2 text-sm text-gray-600">
-              <button onClick={() => router.push('/')} className="hover:text-forest-600">
+              <button
+                onClick={() => router.push("/")}
+                className="hover:text-forest-600"
+              >
                 Home
               </button>
               <span>/</span>
-              <button onClick={() => router.push('/products')} className="hover:text-forest-600">
+              <button
+                onClick={() => router.push("/products")}
+                className="hover:text-forest-600"
+              >
                 Products
               </button>
               <span>/</span>
@@ -116,12 +130,19 @@ export default function ProductDetailPage() {
               </div>
               {/* Thumbnail Gallery - In a real app, you'd have multiple images */}
               <div className="grid grid-cols-4 gap-2">
-                {[product.image, product.image, product.image, product.image].map((img, idx) => (
+                {[
+                  product.image,
+                  product.image,
+                  product.image,
+                  product.image,
+                ].map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
                     className={`bg-white rounded-lg overflow-hidden shadow-sm aspect-square border-2 transition-colors relative ${
-                      selectedImage === img ? 'border-forest-600' : 'border-transparent hover:border-gray-300'
+                      selectedImage === img
+                        ? "border-forest-600"
+                        : "border-transparent hover:border-gray-300"
                     }`}
                   >
                     <Image
@@ -155,8 +176,14 @@ export default function ProductDetailPage() {
 
               {/* Rating */}
               <div className="flex items-center gap-3 mb-6">
-                <StarRating rating={product.rating} size="lg" showRating={false} />
-                <span className="text-gray-900 font-medium">{product.rating}</span>
+                <StarRating
+                  rating={product.rating}
+                  size="lg"
+                  showRating={false}
+                />
+                <span className="text-gray-900 font-medium">
+                  {product.rating}
+                </span>
                 <span className="text-gray-600">
                   ({product.reviewCount} reviews)
                 </span>
@@ -239,8 +266,18 @@ export default function ProductDetailPage() {
                   className="px-6 py-3 border-2 border-gray-300 rounded-lg hover:border-forest-600 hover:text-forest-600 transition-colors"
                   aria-label="Add to wishlist"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
                   </svg>
                 </button>
               </div>
@@ -248,20 +285,50 @@ export default function ProductDetailPage() {
               {/* Trust Indicators */}
               <div className="border-t border-gray-200 pt-6 space-y-3">
                 <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <svg className="w-5 h-5 text-forest-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-5 h-5 text-forest-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   <span>Free shipping on orders over $50</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <svg className="w-5 h-5 text-forest-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-5 h-5 text-forest-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   <span>30-day return policy</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <svg className="w-5 h-5 text-forest-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-5 h-5 text-forest-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   <span>1-year warranty included</span>
                 </div>
@@ -275,31 +342,31 @@ export default function ProductDetailPage() {
             <div className="border-b border-gray-200">
               <div className="flex gap-8 px-8">
                 <button
-                  onClick={() => setActiveTab('description')}
+                  onClick={() => setActiveTab("description")}
                   className={`py-4 font-medium border-b-2 transition-colors ${
-                    activeTab === 'description'
-                      ? 'border-forest-600 text-forest-600'
-                      : 'border-transparent text-gray-600 hover:text-gray-900'
+                    activeTab === "description"
+                      ? "border-forest-600 text-forest-600"
+                      : "border-transparent text-gray-600 hover:text-gray-900"
                   }`}
                 >
                   Description
                 </button>
                 <button
-                  onClick={() => setActiveTab('specs')}
+                  onClick={() => setActiveTab("specs")}
                   className={`py-4 font-medium border-b-2 transition-colors ${
-                    activeTab === 'specs'
-                      ? 'border-forest-600 text-forest-600'
-                      : 'border-transparent text-gray-600 hover:text-gray-900'
+                    activeTab === "specs"
+                      ? "border-forest-600 text-forest-600"
+                      : "border-transparent text-gray-600 hover:text-gray-900"
                   }`}
                 >
                   Specifications
                 </button>
                 <button
-                  onClick={() => setActiveTab('reviews')}
+                  onClick={() => setActiveTab("reviews")}
                   className={`py-4 font-medium border-b-2 transition-colors ${
-                    activeTab === 'reviews'
-                      ? 'border-forest-600 text-forest-600'
-                      : 'border-transparent text-gray-600 hover:text-gray-900'
+                    activeTab === "reviews"
+                      ? "border-forest-600 text-forest-600"
+                      : "border-transparent text-gray-600 hover:text-gray-900"
                   }`}
                 >
                   Reviews ({product.reviewCount})
@@ -309,12 +376,14 @@ export default function ProductDetailPage() {
 
             {/* Tab Content */}
             <div className="p-8">
-              {activeTab === 'description' && (
+              {activeTab === "description" && (
                 <div className="prose max-w-none">
                   <p className="text-gray-700 leading-relaxed mb-4">
                     {product.description}
                   </p>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3 mt-6">Features</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 mt-6">
+                    Features
+                  </h3>
                   <ul className="space-y-2 text-gray-700">
                     <li>Premium quality construction for durability</li>
                     <li>Designed for outdoor enthusiasts</li>
@@ -325,11 +394,13 @@ export default function ProductDetailPage() {
                 </div>
               )}
 
-              {activeTab === 'specs' && (
+              {activeTab === "specs" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="font-medium text-gray-700">Category</span>
+                      <span className="font-medium text-gray-700">
+                        Category
+                      </span>
                       <span className="text-gray-900">{product.category}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-200">
@@ -337,9 +408,11 @@ export default function ProductDetailPage() {
                       <span className="text-gray-900">{product.id}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="font-medium text-gray-700">Availability</span>
+                      <span className="font-medium text-gray-700">
+                        Availability
+                      </span>
                       <span className="text-gray-900">
-                        {product.inStock ? 'In Stock' : 'Out of Stock'}
+                        {product.inStock ? "In Stock" : "Out of Stock"}
                       </span>
                     </div>
                   </div>
@@ -349,18 +422,22 @@ export default function ProductDetailPage() {
                       <span className="text-gray-900">2.5 lbs</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="font-medium text-gray-700">Dimensions</span>
+                      <span className="font-medium text-gray-700">
+                        Dimensions
+                      </span>
                       <span className="text-gray-900">12 x 8 x 4 in</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="font-medium text-gray-700">Material</span>
+                      <span className="font-medium text-gray-700">
+                        Material
+                      </span>
                       <span className="text-gray-900">Ripstop Nylon</span>
                     </div>
                   </div>
                 </div>
               )}
 
-              {activeTab === 'reviews' && (
+              {activeTab === "reviews" && (
                 <div>
                   <div className="flex items-center gap-8 mb-8">
                     <div className="text-center">
@@ -376,16 +453,24 @@ export default function ProductDetailPage() {
                   <div className="space-y-6">
                     {/* Sample reviews */}
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="border-b border-gray-200 pb-6 last:border-0">
+                      <div
+                        key={i}
+                        className="border-b border-gray-200 pb-6 last:border-0"
+                      >
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <div className="font-semibold text-gray-900">Customer Name</div>
+                            <div className="font-semibold text-gray-900">
+                              Customer Name
+                            </div>
                             <StarRating rating={5} size="sm" />
                           </div>
-                          <span className="text-sm text-gray-500">2 weeks ago</span>
+                          <span className="text-sm text-gray-500">
+                            2 weeks ago
+                          </span>
                         </div>
                         <p className="text-gray-700">
-                          Great product! Exactly what I was looking for. The quality is excellent and it arrived quickly.
+                          Great product! Exactly what I was looking for. The
+                          quality is excellent and it arrived quickly.
                         </p>
                       </div>
                     ))}
@@ -398,13 +483,17 @@ export default function ProductDetailPage() {
           {/* Related Products */}
           {relatedProducts.length > 0 && (
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">You May Also Like</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                You May Also Like
+              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {relatedProducts.map((relatedProduct) => (
                   <ProductCard
                     key={relatedProduct.id}
                     product={relatedProduct}
-                    onQuickView={() => router.push(`/products/${relatedProduct.id}`)}
+                    onQuickView={() =>
+                      router.push(`/products/${relatedProduct.id}`)
+                    }
                   />
                 ))}
               </div>
