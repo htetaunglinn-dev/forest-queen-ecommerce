@@ -304,7 +304,7 @@ export const navigation: NavigationItem[] = [
   { label: 'Home', href: '/' },
   {
     label: 'Categories',
-    href: '/categories',
+    href: '/categories/all-products',
     children: [
       { label: 'Tents & Shelters', href: '/categories/tents-shelters' },
       { label: 'Sleeping Gear', href: '/categories/sleeping-gear' },
