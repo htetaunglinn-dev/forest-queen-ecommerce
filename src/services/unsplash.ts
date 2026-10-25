@@ -168,21 +168,6 @@ export function getPhotoPageUrl(image: UnsplashImage): string {
 }
 
 /**
- * Trigger a download tracking event
- * Required by Unsplash API guidelines when displaying images
- * NOTE: This function is deprecated for client-side use.
- * Download tracking should be handled server-side to protect the API key.
- * @param downloadLocation - The download_location URL from the image object
- * @deprecated Use server-side download tracking instead
- */
-export async function triggerDownload(_downloadLocation: string): Promise<void> {
-  console.warn('[Unsplash] triggerDownload is deprecated. Implement server-side download tracking.');
-  // Download tracking should be implemented server-side
-  // For now, this is a no-op to avoid exposing the API key
-  return;
-}
-
-/**
  * Helper to get a specific image for a product category
  * @param category - Product category name
  * @param index - Index to select from multiple options (default: 0)
