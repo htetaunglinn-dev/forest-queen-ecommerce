@@ -1,12 +1,11 @@
 import { products, shippingMethods } from '@/data/products';
 import { calculateTax, calculateTotal, generateOrderNumber, isValidEmail } from '@/lib/utils';
-import { CartItem, OrderDraft, PAYMENT_TYPE, PaymentSummary, PaymentType, ShippingAddress } from '@/types';
+import { CartItem, OrderDraft, PAYMENT_TYPE, ShippingAddress } from '@/types';
 
 const MAX_LINE_ITEMS = 50;
 const MAX_QUANTITY = 99;
 const MAX_FIELD_LENGTH = 200;
 const ADDRESS_FIELDS: Array<keyof ShippingAddress> = ['fullName', 'email', 'phone', 'address', 'city', 'state', 'postalCode', 'country'];
-const PAYMENT_TYPES = Object.values(PAYMENT_TYPE) as string[];
 
 type OrderValidation = { order: OrderDraft } | { error: string };
 
@@ -40,15 +39,6 @@ function parseShippingAddress(value: unknown): ShippingAddress | null {
   return isValidEmail(address.email) ? address : null;
 }
 
-function parsePayment(value: unknown): PaymentSummary | null {
-  if (!isRecord(value) || !PAYMENT_TYPES.includes(value.type as string)) return null;
-
-  const type = value.type as PaymentType;
-  if (type !== PAYMENT_TYPE.card) return { type };
-  if (!isFilledString(value.cardName) || typeof value.last4 !== 'string' || !/^\d{4}$/.test(value.last4)) return null;
-  return { type, cardName: value.cardName.trim(), last4: value.last4 };
-}
-
 export function buildOrder(body: unknown): OrderValidation {
   if (!isRecord(body)) return { error: 'Invalid request body' };
 
@@ -61,9 +51,6 @@ export function buildOrder(body: unknown): OrderValidation {
   const shippingMethod = shippingMethods.find((method) => method.id === body.shippingMethodId);
   if (!shippingMethod) return { error: 'Invalid shipping method' };
 
-  const paymentMethod = parsePayment(body.payment);
-  if (!paymentMethod) return { error: 'Invalid payment details' };
-
   const subtotal = roundCents(items.reduce((sum, item) => sum + item.product.price * item.quantity, 0));
   const shipping = shippingMethod.price;
   const tax = roundCents(calculateTax(subtotal));
@@ -74,7 +61,7 @@ export function buildOrder(body: unknown): OrderValidation {
       items,
       shippingAddress,
       shippingMethod,
-      paymentMethod,
+      paymentMethod: { type: PAYMENT_TYPE.stripe },
       subtotal,
       shipping,
       tax,

@@ -164,33 +164,6 @@ export const isValidPhone = (phone: string): boolean => {
 };
 
 /**
- * Validate credit card number (basic Luhn algorithm)
- */
-export const isValidCardNumber = (cardNumber: string): boolean => {
-  const cleanNumber = cardNumber.replace(/\s/g, '');
-  if (!/^\d{13,19}$/.test(cleanNumber)) return false;
-
-  let sum = 0;
-  let isEven = false;
-
-  for (let i = cleanNumber.length - 1; i >= 0; i--) {
-    let digit = parseInt(cleanNumber.charAt(i), 10);
-
-    if (isEven) {
-      digit *= 2;
-      if (digit > 9) {
-        digit -= 9;
-      }
-    }
-
-    sum += digit;
-    isEven = !isEven;
-  }
-
-  return sum % 10 === 0;
-};
-
-/**
  * Format card number with spaces
  */
 export const formatCardNumber = (cardNumber: string): string => {
