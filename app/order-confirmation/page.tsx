@@ -8,69 +8,32 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { formatCurrency, formatOrderDate, calculateDeliveryDate } from '@/lib/utils';
 import { CheckCircle, Package, Truck, Mail, Printer, ArrowRight } from 'lucide-react';
-import type { CartItem } from '@/contexts/CartContext';
-
-interface ShippingAddress {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-}
-
-interface ShippingMethod {
-  name: string;
-  estimatedDays: string;
-}
-
-interface PaymentMethod {
-  type: 'card' | 'paypal' | 'apple-pay';
-  cardName?: string;
-  cardNumber?: string;
-}
-
-interface OrderData {
-  orderNumber: string;
-  date: string;
-  items: CartItem[];
-  shippingAddress: ShippingAddress;
-  shippingMethod: ShippingMethod;
-  paymentMethod: PaymentMethod;
-  subtotal: number;
-  shipping: number;
-  tax: number;
-  total: number;
-}
+import { PAYMENT_TYPE, type PlacedOrder } from '@/types';
 
 function OrderConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const orderNumber = searchParams.get('order');
+  const orderId = searchParams.get('order');
 
-  const [orderData, setOrderData] = useState<OrderData | null>(null);
+  const [orderData, setOrderData] = useState<PlacedOrder | null>(null);
 
   useEffect(() => {
-    // Load order data from localStorage
-    const savedOrder = localStorage.getItem('forest-queen-last-order');
-    if (savedOrder) {
-      try {
-        const data = JSON.parse(savedOrder);
-        if (data.orderNumber === orderNumber) {
-          setOrderData(data);
-        } else {
-          router.push('/');
-        }
-      } catch (error) {
+    if (!orderId) {
+      router.push('/');
+      return;
+    }
+
+    fetch(`/api/orders/${encodeURIComponent(orderId)}`)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Failed to load order: ${response.status}`);
+        return response.json();
+      })
+      .then(setOrderData)
+      .catch((error) => {
         console.error('Failed to load order:', error);
         router.push('/');
-      }
-    } else {
-      router.push('/');
-    }
-  }, [orderNumber, router]);
+      });
+  }, [orderId, router]);
 
   const handlePrint = () => {
     window.print();
@@ -265,19 +228,19 @@ function OrderConfirmationContent() {
                 Payment Method
               </h3>
               <div className="text-gray-700">
-                {orderData.paymentMethod.type === 'card' && (
+                {orderData.paymentMethod.type === PAYMENT_TYPE.card && (
                   <>
                     <p className="font-semibold">Credit Card</p>
                     <p className="text-sm mt-2">
                       {orderData.paymentMethod.cardName}
                     </p>
-                    <p className="text-sm">**** **** **** {orderData.paymentMethod.cardNumber?.slice(-4)}</p>
+                    <p className="text-sm">**** **** **** {orderData.paymentMethod.last4}</p>
                   </>
                 )}
-                {orderData.paymentMethod.type === 'paypal' && (
+                {orderData.paymentMethod.type === PAYMENT_TYPE.paypal && (
                   <p className="font-semibold">PayPal</p>
                 )}
-                {orderData.paymentMethod.type === 'apple-pay' && (
+                {orderData.paymentMethod.type === PAYMENT_TYPE.applePay && (
                   <p className="font-semibold">Apple Pay</p>
                 )}
                 <div className="mt-4 flex items-center gap-2 text-sm text-green-600">
