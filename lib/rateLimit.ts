@@ -164,10 +164,11 @@ export function getClientIP(request: NextRequest): string {
 export function checkRateLimit(
   request: NextRequest,
   limit: number = 10,
-  windowMs: number = 60 * 1000
+  windowMs: number = 60 * 1000,
+  scope?: string
 ): NextResponse | null {
   const ip = getClientIP(request);
-  const result = rateLimiter.check(ip, limit, windowMs);
+  const result = rateLimiter.check(scope ? `${scope}:${ip}` : ip, limit, windowMs);
 
   if (!result.allowed) {
     const resetIn = Math.ceil((result.resetTime - Date.now()) / 1000);
