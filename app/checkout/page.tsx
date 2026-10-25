@@ -11,13 +11,13 @@ import { Button } from '@/components/ui/Button';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/contexts/ToastContext';
 import { shippingMethods } from '@/data/products';
-import { ShippingAddress, PaymentMethod, ShippingMethod, CreateOrderRequest, PAYMENT_TYPE } from '@/types';
-import { calculateTax, calculateTotal, isValidEmail, isValidPhone, isValidCardNumber } from '@/lib/utils';
+import { ShippingAddress, ShippingMethod, CreateOrderRequest } from '@/types';
+import { calculateTax, calculateTotal, isValidEmail, isValidPhone } from '@/lib/utils';
 import { ArrowLeft, Truck, Lock } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, getSubtotal, clearCart } = useCart();
+  const { items, getSubtotal } = useCart();
   const { toast } = useToast();
 
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
@@ -31,14 +31,9 @@ export default function CheckoutPage() {
     country: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>({
-    type: 'card',
-  });
-
   const [selectedShippingMethod, setSelectedShippingMethod] = useState<ShippingMethod>(shippingMethods[0]);
 
   const [shippingErrors, setShippingErrors] = useState<Partial<Record<keyof ShippingAddress, string>>>({});
-  const [paymentErrors, setPaymentErrors] = useState<Partial<Record<keyof PaymentMethod, string>>>({});
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Redirect if cart is empty
@@ -59,19 +54,6 @@ export default function CheckoutPage() {
     if (shippingErrors[field]) {
       setShippingErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-  };
-
-  const handlePaymentChange = (field: keyof PaymentMethod, value: string) => {
-    setPaymentMethod((prev) => ({ ...prev, [field]: value }));
-    // Clear error for this field
-    if (paymentErrors[field]) {
-      setPaymentErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-  };
-
-  const handlePaymentTypeChange = (type: 'card' | 'paypal' | 'apple-pay') => {
-    setPaymentMethod({ type });
-    setPaymentErrors({});
   };
 
   const validateShippingAddress = (): boolean => {
@@ -117,45 +99,8 @@ export default function CheckoutPage() {
     return Object.keys(errors).length === 0;
   };
 
-  const validatePaymentMethod = (): boolean => {
-    if (paymentMethod.type !== 'card') {
-      return true; // PayPal and Apple Pay don't need validation in this mock
-    }
-
-    const errors: Partial<Record<keyof PaymentMethod, string>> = {};
-
-    if (!paymentMethod.cardNumber?.trim()) {
-      errors.cardNumber = 'Card number is required';
-    } else if (!isValidCardNumber(paymentMethod.cardNumber)) {
-      errors.cardNumber = 'Please enter a valid card number';
-    }
-
-    if (!paymentMethod.cardName?.trim()) {
-      errors.cardName = 'Cardholder name is required';
-    }
-
-    if (!paymentMethod.expiryDate?.trim()) {
-      errors.expiryDate = 'Expiry date is required';
-    } else if (!/^\d{2}\/\d{2}$/.test(paymentMethod.expiryDate)) {
-      errors.expiryDate = 'Please enter a valid expiry date (MM/YY)';
-    }
-
-    if (!paymentMethod.cvv?.trim()) {
-      errors.cvv = 'CVV is required';
-    } else if (!/^\d{3,4}$/.test(paymentMethod.cvv)) {
-      errors.cvv = 'Please enter a valid CVV';
-    }
-
-    setPaymentErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
   const handlePlaceOrder = async () => {
-    // Validate all fields
-    const isShippingValid = validateShippingAddress();
-    const isPaymentValid = validatePaymentMethod();
-
-    if (!isShippingValid || !isPaymentValid) {
+    if (!validateShippingAddress()) {
       // Scroll to first error
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -163,16 +108,10 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
 
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
     const orderRequest: CreateOrderRequest = {
       items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       shippingAddress,
       shippingMethodId: selectedShippingMethod.id,
-      payment: paymentMethod.type === PAYMENT_TYPE.card
-        ? { type: paymentMethod.type, cardName: paymentMethod.cardName, last4: paymentMethod.cardNumber?.replace(/\D/g, '').slice(-4) }
-        : { type: paymentMethod.type },
     };
 
     try {
@@ -184,8 +123,7 @@ export default function CheckoutPage() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Failed to place order');
 
-      clearCart();
-      router.push(`/order-confirmation?order=${result.id}`);
+      window.location.assign(result.checkoutUrl);
     } catch (error) {
       setIsProcessing(false);
       toast({
@@ -289,12 +227,7 @@ export default function CheckoutPage() {
 
               {/* Payment Method */}
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <PaymentForm
-                  paymentMethod={paymentMethod}
-                  onChange={handlePaymentChange}
-                  onTypeChange={handlePaymentTypeChange}
-                  errors={paymentErrors}
-                />
+                <PaymentForm />
               </div>
             </div>
 
@@ -323,12 +256,12 @@ export default function CheckoutPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Processing...
+                      Redirecting to Stripe...
                     </span>
                   ) : (
                     <span className="flex items-center gap-2">
                       <Lock className="w-5 h-5" />
-                      Place Order
+                      Continue to Payment
                     </span>
                   )}
                 </Button>

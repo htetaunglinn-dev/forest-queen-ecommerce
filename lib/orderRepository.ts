@@ -1,5 +1,5 @@
 import { getSql } from '@/lib/db';
-import { OrderDraft, PlacedOrder } from '@/types';
+import { ORDER_STATUS, OrderDraft, PlacedOrder } from '@/types';
 
 export async function insertOrder(order: OrderDraft): Promise<string> {
   const sql = getSql();
@@ -25,4 +25,15 @@ export async function findOrderById(id: string): Promise<PlacedOrder | null> {
     WHERE id = ${id}
   `;
   return (row as PlacedOrder | undefined) ?? null;
+}
+
+export async function markOrderPaid(orderId: string, stripeSessionId: string): Promise<boolean> {
+  const sql = getSql();
+  const rows = await sql`
+    UPDATE orders
+    SET status = ${ORDER_STATUS.paid}, stripe_session_id = ${stripeSessionId}
+    WHERE id = ${orderId} AND status = ${ORDER_STATUS.pending}
+    RETURNING id
+  `;
+  return rows.length > 0;
 }

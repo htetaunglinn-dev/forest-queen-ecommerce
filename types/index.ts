@@ -75,6 +75,7 @@ export const PAYMENT_TYPE = {
   card: 'card',
   paypal: 'paypal',
   applePay: 'apple-pay',
+  stripe: 'stripe',
 } as const;
 
 export type PaymentType = (typeof PAYMENT_TYPE)[keyof typeof PAYMENT_TYPE];
@@ -89,7 +90,6 @@ export interface CreateOrderRequest {
   items: Array<{ productId: string; quantity: number }>;
   shippingAddress: ShippingAddress;
   shippingMethodId: string;
-  payment: PaymentSummary;
 }
 
 export interface OrderDraft {
@@ -104,10 +104,30 @@ export interface OrderDraft {
   total: number;
 }
 
+export const ORDER_STATUS = {
+  pending: 'pending',
+  paid: 'paid',
+  processing: 'processing',
+  shipped: 'shipped',
+  delivered: 'delivered',
+  cancelled: 'cancelled',
+} as const;
+
+export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
+
+export const STRIPE_EVENT = {
+  checkoutCompleted: 'checkout.session.completed',
+  checkoutAsyncPaymentSucceeded: 'checkout.session.async_payment_succeeded',
+} as const;
+
+export const STRIPE_PAYMENT_STATUS = {
+  paid: 'paid',
+} as const;
+
 export interface PlacedOrder extends OrderDraft {
   id: string;
   date: string;
-  status: Order['status'];
+  status: OrderStatus;
 }
 
 export interface PaymentMethod {
@@ -130,5 +150,5 @@ export interface Order {
   shippingCost: number;
   tax: number;
   total: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  status: OrderStatus;
 }

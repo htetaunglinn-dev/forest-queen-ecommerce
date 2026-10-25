@@ -7,13 +7,19 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { formatCurrency, formatOrderDate, calculateDeliveryDate } from '@/lib/utils';
-import { CheckCircle, Package, Truck, Mail, Printer, ArrowRight } from 'lucide-react';
-import { PAYMENT_TYPE, type PlacedOrder } from '@/types';
+import { CheckCircle, Clock, Package, Truck, Mail, Printer, ArrowRight } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import { ORDER_STATUS, PAYMENT_TYPE, type PlacedOrder } from '@/types';
+
+const STATUS_CHECK_INTERVAL_MS = 3000;
+const MAX_STATUS_CHECKS = 10;
 
 function OrderConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order');
+
+  const { items, clearCart } = useCart();
 
   const [orderData, setOrderData] = useState<PlacedOrder | null>(null);
 
@@ -23,17 +29,34 @@ function OrderConfirmationContent() {
       return;
     }
 
-    fetch(`/api/orders/${encodeURIComponent(orderId)}`)
-      .then((response) => {
-        if (!response.ok) throw new Error(`Failed to load order: ${response.status}`);
-        return response.json();
-      })
-      .then(setOrderData)
-      .catch((error) => {
-        console.error('Failed to load order:', error);
-        router.push('/');
-      });
+    let checks = 0;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const loadOrder = () =>
+      fetch(`/api/orders/${encodeURIComponent(orderId)}`)
+        .then((response) => {
+          if (!response.ok) throw new Error(`Failed to load order: ${response.status}`);
+          return response.json();
+        })
+        .then((order: PlacedOrder) => {
+          setOrderData(order);
+          checks += 1;
+          if (order.status === ORDER_STATUS.pending && checks < MAX_STATUS_CHECKS) {
+            retryTimer = setTimeout(loadOrder, STATUS_CHECK_INTERVAL_MS);
+          }
+        })
+        .catch((error) => {
+          console.error('Failed to load order:', error);
+          router.push('/');
+        });
+
+    loadOrder();
+    return () => clearTimeout(retryTimer);
   }, [orderId, router]);
+
+  useEffect(() => {
+    if (orderData && items.length > 0) clearCart();
+  }, [orderData, items.length, clearCart]);
 
   const handlePrint = () => {
     window.print();
@@ -54,6 +77,8 @@ function OrderConfirmationContent() {
     );
   }
 
+  const isPaymentPending = orderData.status === ORDER_STATUS.pending;
+
   const estimatedDeliveryDate = calculateDeliveryDate(
     parseInt(orderData.shippingMethod.estimatedDays) || 7
   );
@@ -67,13 +92,24 @@ function OrderConfirmationContent() {
           {/* Success Header */}
           <div className="text-center mb-12">
             <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-12 h-12 text-green-600" />
-              </div>
+              {isPaymentPending ? (
+                <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
+                  <Clock className="w-12 h-12 text-amber-600 animate-pulse" />
+                </div>
+              ) : (
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-12 h-12 text-green-600" />
+                </div>
+              )}
             </div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Order Confirmed!
+              {isPaymentPending ? 'Confirming your payment…' : 'Order Confirmed!'}
             </h1>
+            {isPaymentPending && (
+              <p className="text-gray-600 mb-2">
+                We&apos;re waiting for Stripe to confirm your payment. This usually takes a few seconds.
+              </p>
+            )}
             <p className="text-xl text-gray-600 mb-2">
               Thank you for your order, {orderData.shippingAddress.fullName.split(' ')[0]}!
             </p>
@@ -243,10 +279,20 @@ function OrderConfirmationContent() {
                 {orderData.paymentMethod.type === PAYMENT_TYPE.applePay && (
                   <p className="font-semibold">Apple Pay</p>
                 )}
-                <div className="mt-4 flex items-center gap-2 text-sm text-green-600">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Payment confirmed</span>
-                </div>
+                {orderData.paymentMethod.type === PAYMENT_TYPE.stripe && (
+                  <p className="font-semibold">Paid securely with Stripe</p>
+                )}
+                {isPaymentPending ? (
+                  <div className="mt-4 flex items-center gap-2 text-sm text-amber-600">
+                    <Clock className="w-4 h-4" />
+                    <span>Waiting for confirmation</span>
+                  </div>
+                ) : (
+                  <div className="mt-4 flex items-center gap-2 text-sm text-green-600">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Payment confirmed</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
