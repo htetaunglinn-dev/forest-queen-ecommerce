@@ -2,23 +2,25 @@
 
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/contexts/ToastContext';
+import { AUTH_MODE, AuthMode, MIN_PASSWORD_LENGTH } from '@/types';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type AuthMode = 'login' | 'signup';
+const EMPTY_FORM = { name: '', email: '', password: '', confirmPassword: '' };
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
-  const [mode, setMode] = useState<AuthMode>('login');
+  const [mode, setMode] = useState<AuthMode>(AUTH_MODE.login);
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login, register } = useAuth();
+  const { toast } = useToast();
 
   if (!isOpen) return null;
 
@@ -27,16 +29,47 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Add authentication logic
-    console.log('Form submitted:', formData);
+    setError(null);
+
+    if (mode === AUTH_MODE.signup) {
+      if (formData.password.length < MIN_PASSWORD_LENGTH) {
+        setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+    }
+
+    setIsSubmitting(true);
+    try {
+      const { name, email, password } = formData;
+      const user = mode === AUTH_MODE.login
+        ? await login({ email, password })
+        : await register({ name, email, password });
+      const firstName = user?.name.split(' ')[0] ?? '';
+      toast({
+        title: mode === AUTH_MODE.login ? `Welcome back, ${firstName}!` : `Welcome to Forest Queen, ${firstName}!`,
+        variant: 'success',
+      });
+      setFormData(EMPTY_FORM);
+      setShowPassword(false);
+      onClose();
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Something went wrong');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const switchMode = () => {
-    setMode(mode === 'login' ? 'signup' : 'login');
-    setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+    setMode(mode === AUTH_MODE.login ? AUTH_MODE.signup : AUTH_MODE.login);
+    setFormData(EMPTY_FORM);
     setShowPassword(false);
+    setError(null);
   };
 
   return (
@@ -69,10 +102,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {/* Header */}
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+                {mode === AUTH_MODE.login ? 'Welcome Back' : 'Create Account'}
               </h2>
               <p className="text-gray-600">
-                {mode === 'login'
+                {mode === AUTH_MODE.login
                   ? 'Sign in to access your account'
                   : 'Sign up to start shopping'}
               </p>
@@ -81,7 +114,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Field (Signup only) */}
-              {mode === 'signup' && (
+              {mode === AUTH_MODE.signup && (
                 <div>
                   <label
                     htmlFor="name"
@@ -168,7 +201,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
 
               {/* Confirm Password Field (Signup only) */}
-              {mode === 'signup' && (
+              {mode === AUTH_MODE.signup && (
                 <div>
                   <label
                     htmlFor="confirmPassword"
@@ -196,7 +229,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               )}
 
               {/* Forgot Password (Login only) */}
-              {mode === 'login' && (
+              {mode === AUTH_MODE.login && (
                 <div className="flex items-center justify-between text-sm">
                   <label className="flex items-center cursor-pointer">
                     <input
@@ -214,12 +247,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
               )}
 
+              {error && (
+                <p role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                  {error}
+                </p>
+              )}
+
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full py-3 px-4 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {mode === 'login' ? 'Sign In' : 'Create Account'}
+                {isSubmitting
+                  ? mode === AUTH_MODE.login ? 'Signing In...' : 'Creating Account...'
+                  : mode === AUTH_MODE.login ? 'Sign In' : 'Create Account'}
               </button>
             </form>
 
@@ -279,7 +321,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {/* Toggle Mode */}
             <div className="mt-6 text-center text-sm">
               <span className="text-gray-600">
-                {mode === 'login'
+                {mode === AUTH_MODE.login
                   ? "Don't have an account?"
                   : 'Already have an account?'}
               </span>
@@ -288,7 +330,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 onClick={switchMode}
                 className="ml-1 text-emerald-600 hover:text-emerald-700 font-semibold cursor-pointer"
               >
-                {mode === 'login' ? 'Sign up' : 'Sign in'}
+                {mode === AUTH_MODE.login ? 'Sign up' : 'Sign in'}
               </button>
             </div>
           </div>

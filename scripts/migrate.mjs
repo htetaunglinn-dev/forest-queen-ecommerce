@@ -6,4 +6,4 @@ const schema = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8'
 for (const statement of schema.split(';').filter((s) => s.trim())) {
   await sql.query(statement);
 }
-console.log('orders table ready');
+console.log('schema ready');

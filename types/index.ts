@@ -115,6 +115,55 @@ export const ORDER_STATUS = {
 
 export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface StoredUser extends User {
+  passwordHash: string;
+}
+
+export interface RegistrationInput {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface Credentials {
+  email: string;
+  password: string;
+}
+
+export type ParseResult<T> = { input: T } | { error: string };
+
+export interface AuthResponse {
+  user: User | null;
+}
+
+export interface AuthContextValue {
+  user: User | null;
+  isLoading: boolean;
+  login: (credentials: Credentials) => Promise<User | null>;
+  register: (input: RegistrationInput) => Promise<User | null>;
+  logout: () => Promise<void>;
+}
+
+export const AUTH_MODE = {
+  login: 'login',
+  signup: 'signup',
+} as const;
+
+export type AuthMode = (typeof AUTH_MODE)[keyof typeof AUTH_MODE];
+
+export const MIN_PASSWORD_LENGTH = 8;
+
+export const RATE_LIMIT_SCOPE = {
+  login: 'login',
+  register: 'register',
+} as const;
+
 export const STRIPE_EVENT = {
   checkoutCompleted: 'checkout.session.completed',
   checkoutAsyncPaymentSucceeded: 'checkout.session.async_payment_succeeded',

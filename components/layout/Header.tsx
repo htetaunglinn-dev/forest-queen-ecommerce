@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, LogOut } from 'lucide-react';
 import { navigation, products } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/contexts/ToastContext';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { SearchDropdown } from '@/components/search/SearchDropdown';
 
@@ -14,7 +17,18 @@ export const Header: React.FC = () => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { getItemCount } = useCart();
+  const { user, logout } = useAuth();
+  const { toast } = useToast();
   const searchRef = useRef<HTMLDivElement>(null);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({ title: 'Signed out', description: 'See you on the trail!' });
+    } catch {
+      toast({ title: 'Could not sign out', description: 'Please try again.', variant: 'destructive' });
+    }
+  };
 
   // Filter products based on search query
   const searchResults = useMemo(() => {
@@ -153,13 +167,34 @@ export const Header: React.FC = () => {
 
           {/* Right Icons */}
           <div className="flex items-center space-x-6">
-            <button
-              onClick={() => setAuthModalOpen(true)}
-              className="text-gray-700 hover:text-emerald-700 transition-colors"
-              aria-label="Account"
-            >
-              <User size={24} />
-            </button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2 text-gray-700 hover:text-emerald-700 transition-colors">
+                  <User size={24} />
+                  <span className="hidden lg:inline text-sm font-medium">{user.name.split(' ')[0]}</span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <div className="px-3 py-2 border-b border-gray-100 mb-1">
+                    <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  </div>
+                  <DropdownMenuItem onSelect={handleLogout}>
+                    <span className="flex items-center gap-2">
+                      <LogOut size={16} />
+                      Sign out
+                    </span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <button
+                onClick={() => setAuthModalOpen(true)}
+                className="text-gray-700 hover:text-emerald-700 transition-colors"
+                aria-label="Account"
+              >
+                <User size={24} />
+              </button>
+            )}
             <Link href="/cart" className="relative text-gray-700 hover:text-emerald-700 transition-colors">
               <ShoppingCart size={24} />
               {getItemCount() > 0 && (
