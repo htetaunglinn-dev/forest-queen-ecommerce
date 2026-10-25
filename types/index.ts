@@ -71,8 +71,47 @@ export interface ShippingMethod {
   estimatedDays: string;
 }
 
+export const PAYMENT_TYPE = {
+  card: 'card',
+  paypal: 'paypal',
+  applePay: 'apple-pay',
+} as const;
+
+export type PaymentType = (typeof PAYMENT_TYPE)[keyof typeof PAYMENT_TYPE];
+
+export interface PaymentSummary {
+  type: PaymentType;
+  cardName?: string;
+  last4?: string;
+}
+
+export interface CreateOrderRequest {
+  items: Array<{ productId: string; quantity: number }>;
+  shippingAddress: ShippingAddress;
+  shippingMethodId: string;
+  payment: PaymentSummary;
+}
+
+export interface OrderDraft {
+  orderNumber: string;
+  items: CartItem[];
+  shippingAddress: ShippingAddress;
+  shippingMethod: ShippingMethod;
+  paymentMethod: PaymentSummary;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
+}
+
+export interface PlacedOrder extends OrderDraft {
+  id: string;
+  date: string;
+  status: Order['status'];
+}
+
 export interface PaymentMethod {
-  type: 'card' | 'paypal' | 'apple-pay';
+  type: PaymentType;
   cardNumber?: string;
   cardName?: string;
   expiryDate?: string;

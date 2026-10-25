@@ -9,37 +9,16 @@ import { PaymentForm } from '@/components/checkout/PaymentForm';
 import { OrderSummary } from '@/components/checkout/OrderSummary';
 import { Button } from '@/components/ui/Button';
 import { useCart } from '@/contexts/CartContext';
-import { ShippingAddress, PaymentMethod, ShippingMethod } from '@/types';
-import { calculateTax, calculateTotal, isValidEmail, isValidPhone, isValidCardNumber, generateOrderNumber } from '@/lib/utils';
+import { useToast } from '@/contexts/ToastContext';
+import { shippingMethods } from '@/data/products';
+import { ShippingAddress, PaymentMethod, ShippingMethod, CreateOrderRequest, PAYMENT_TYPE } from '@/types';
+import { calculateTax, calculateTotal, isValidEmail, isValidPhone, isValidCardNumber } from '@/lib/utils';
 import { ArrowLeft, Truck, Lock } from 'lucide-react';
-
-const shippingMethods: ShippingMethod[] = [
-  {
-    id: 'standard',
-    name: 'Standard Shipping',
-    description: '5-7 business days',
-    price: 0,
-    estimatedDays: '5-7 days',
-  },
-  {
-    id: 'express',
-    name: 'Express Shipping',
-    description: '2-3 business days',
-    price: 9.99,
-    estimatedDays: '2-3 days',
-  },
-  {
-    id: 'overnight',
-    name: 'Overnight Shipping',
-    description: 'Next business day',
-    price: 19.99,
-    estimatedDays: '1 day',
-  },
-];
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getSubtotal, clearCart } = useCart();
+  const { toast } = useToast();
 
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
     fullName: '',
@@ -187,29 +166,34 @@ export default function CheckoutPage() {
     // Simulate payment processing
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Generate order number and store order details
-    const orderNumber = generateOrderNumber();
-    const orderData = {
-      orderNumber,
-      items,
+    const orderRequest: CreateOrderRequest = {
+      items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
       shippingAddress,
-      shippingMethod: selectedShippingMethod,
-      paymentMethod,
-      subtotal,
-      shipping,
-      tax,
-      total,
-      date: new Date().toISOString(),
+      shippingMethodId: selectedShippingMethod.id,
+      payment: paymentMethod.type === PAYMENT_TYPE.card
+        ? { type: paymentMethod.type, cardName: paymentMethod.cardName, last4: paymentMethod.cardNumber?.replace(/\D/g, '').slice(-4) }
+        : { type: paymentMethod.type },
     };
 
-    // Store order in localStorage (in a real app, this would be an API call)
-    localStorage.setItem('forest-queen-last-order', JSON.stringify(orderData));
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderRequest),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to place order');
 
-    // Clear cart
-    clearCart();
-
-    // Redirect to confirmation page
-    router.push(`/order-confirmation?order=${orderNumber}`);
+      clearCart();
+      router.push(`/order-confirmation?order=${result.id}`);
+    } catch (error) {
+      setIsProcessing(false);
+      toast({
+        title: 'Order failed',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   if (items.length === 0) {
